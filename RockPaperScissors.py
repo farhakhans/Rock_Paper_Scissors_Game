@@ -1,30 +1,42 @@
 import random
 
-def play_game():
-    # Ask the user for their choice
-    user_choice = input("Enter your choice (rock, paper, or scissors): ").lower()
+def hangman_game():
+    word_list = ["python", "javascript", "java", "ruby", "php"]
+    word = random.choice(word_list)
+    guessed_letters = []
+    attempts = 6
+    display_word = "_" * len(word)
 
-    # Ensure the input is valid
-    if user_choice not in ['rock', 'paper', 'scissors']:
-        print("Invalid choice! Please choose 'rock', 'paper', or 'scissors'.")
-        return
+    print("Welcome to Hangman!")
 
-    # Randomly choose for the computer
-    choices = ['rock', 'paper', 'scissors']
-    computer_choice = random.choice(choices)
+    while attempts > 0:
+        print(f"\nWord to guess: {display_word}")
+        print(f"Guessed letters: {', '.join(guessed_letters)}")
+        print(f"Remaining attempts: {attempts}")
 
-    print(f"\nYou chose: {user_choice}")
-    print(f"Computer chose: {computer_choice}")
+        guess = input("Guess a letter: ").lower()
 
-    # Determine the winner
-    if user_choice == computer_choice:
-        print("It's a tie!")
-    elif (user_choice == 'rock' and computer_choice == 'scissors') or \
-         (user_choice == 'paper' and computer_choice == 'rock') or \
-         (user_choice == 'scissors' and computer_choice == 'paper'):
-        print("You win!")
+        if len(guess) != 1 or not guess.isalpha():
+            print("Please enter a valid letter.")
+            continue
+
+        if guess in guessed_letters:
+            print(f"You already guessed {guess}. Try again.")
+            continue
+
+        guessed_letters.append(guess)
+
+        if guess in word:
+            print(f"Good job! {guess} is in the word.")
+            display_word = "".join([letter if letter == guess or letter in guessed_letters else "_" for letter in word])
+        else:
+            attempts -= 1
+            print(f"Oops! {guess} is not in the word.")
+        
+        if "_" not in display_word:
+            print(f"\nCongratulations! You guessed the word: {word}")
+            break
     else:
-        print("You lose! Try again.")
+        print(f"\nGame Over! The word was: {word}")
 
-# Run the game
-play_game()
+hangman_game()
